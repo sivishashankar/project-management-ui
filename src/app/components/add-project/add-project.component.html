@@ -1,0 +1,217 @@
+<div class="container">
+  
+  <!-- Add Project -->
+  <div class="row">
+    
+      <h3>Add Project</h3> <br/>
+
+      <form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()">
+
+        <div class ="row">
+          
+           <!-- Project -->
+          <div class="col-md-3 offset-md-3">
+            <div class="form-group">
+                  <span style="color: red">*</span><label>Project</label>
+                  <input type="text" formControlName="project" name="project" class="form-control" 
+                      [ngClass]="{ 'is-invalid': submitted && projectform.project.errors }" />
+                  <div *ngIf="submitted && projectform.project.errors" class="invalid-feedback">
+                      <div *ngIf="projectform.project.errors.required">Project is required</div>
+                      <div *ngIf="projectform.project.errors.alreadyExists">Project Already exists</div>
+                  </div>
+              </div>
+          </div>
+
+           <!-- Priority -->
+           <div class="col-md-3 offset-md-3">
+              <div class="form-group">
+                
+                <span style="color: red">*</span><label>Priority:</label>   
+                
+                <select class='select-option' formControlName="priority"
+                    class="form-control" [ngClass]="{ 'is-invalid': submitted && projectform.priority.errors }">
+                  <option [selected]="true == true" [ngValue]="0">Please Select</option>
+                  <option class='option' *ngFor='let pr of priorityList' [ngValue]="pr">{{pr}}</option>
+                </select>
+                
+                <div *ngIf="submitted && projectform.priority.errors" class="invalid-feedback">
+                    <div *ngIf="projectform.priority.errors.required">Priority is required</div>
+                    <div *ngIf="projectform.priority.errors.incorrect">Please select Priority</div>
+                </div>
+
+              </div>
+           </div>
+
+           <!-- Manager -->
+           <div class="col-md-3 offset-md-3">
+
+              <div class="form group">
+
+                <mat-form-field>
+                    <mat-label> <span style="color: red">*</span>Search Manager</mat-label>
+
+                    <input type="text" placeholder="Search Manager"  class="form-control"
+                        matInput [formControl]="selectedManager" [matAutocomplete]="auto" />
+
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let manager of (filteredManagerOptions | async)" [value]="manager">
+                        {{ manager }}
+                      </mat-option>
+                    </mat-autocomplete>
+
+                    <mat-error *ngIf="submitted && selectedManager.hasError('required')">
+                        Manager is required.
+                    </mat-error>
+                    <mat-error *ngIf="submitted && selectedManager.hasError('alreadyAssigned')">
+                      Selected Manager was already assigned to different project.Please select other manager.
+                    </mat-error>
+                </mat-form-field>
+
+              </div>
+
+           </div>          
+
+        </div>
+
+        <div class = "row">
+
+           <!-- Start Date -->
+          <div class="col-md-3 offset-md-3">
+            <div class="form-group">
+                  <label>Start Date</label>
+                  <input type="text" formControlName="startDate" name="startDate" class="form-control" 
+                      placeholder= "YYYY/MM/DD" [ngClass]="{ 'is-invalid': submitted && projectform.startDate.errors }" />
+                  <div *ngIf="submitted && projectform.startDate.errors" class="invalid-feedback">
+                      <div *ngIf="projectform.startDate.errors.dateValidator">
+                        Start Date should be in YYYY/MM/DD format
+                      </div>
+                      <div *ngIf="projectform.startDate.errors.startDateRequired">
+                        Start Date is Required when End Date is entered
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+           <!-- End Date -->
+          <div class="col-md-3 offset-md-3">
+            <div class="form-group">
+                  <label>End Date</label>
+                  <input type="text" formControlName="endDate" name="endDate" class="form-control" 
+                     placeholder= "YYYY/MM/DD" [ngClass]="{ 'is-invalid': submitted && projectform.endDate.errors }" />
+                  <div *ngIf="submitted && projectform.endDate.errors" class="invalid-feedback">
+                      <div *ngIf="projectform.endDate.errors.dateValidator">
+                        End Date should be in YYYY/MM/DD format
+                      </div>
+                      <div *ngIf="projectform.endDate.errors.invalidEndDate">
+                        End Date should be greater than Start Date
+                      </div>
+                  </div>
+              </div>
+          </div>
+         
+        </div>
+
+        <br/>
+
+        <div class="row">
+
+           <div class="col-md-1">
+              <input type="submit" value="Add Project" class="btn btn-primary">            
+          </div>  
+
+          <div class="col-md-offset-1 col-md-1">
+             <input type="button" value="Reset" class="btn btn-info" (click)="reset()">                              
+          </div>  
+
+        </div>
+
+      </form>
+
+  </div>
+
+  <hr class="partition" />
+  
+  <!-- Search Project -->
+  <div class="row">
+
+    <h3> Project List </h3><br/>
+
+    <div class="col-md-2">
+      <span><b>Search By Project:</b></span>
+    </div>
+
+    <div class="col-md-2">
+      <input type="text" #searchVal (keyup)="0" id="searchValue" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+      <span><b>Sort By:</b></span>
+    </div>
+
+    <div class="col-md-2">
+        <select #sortBy (change) = "sortresults($event)" class="form-control" name="sortBy" id="sortBy">
+          <option value="0">Select</option>
+          <option value="priority">Priority</option>
+          <option value="startDateStr">Start Date</option>
+          <option value="endDateStr">End Date</option>
+          <option value="completed">Completed</option>
+        </select>
+    </div>
+
+  </div>
+
+  <br/>
+
+  <!-- Display Project List -->
+  <div class="row">
+    
+    <div class="col-md-12">
+
+      <table class="table table-striped table-dark"> 
+
+        <thead>
+          
+          <tr>
+            <th scope="col">Project</th>
+            <th scope="col">No Of Tasks</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Completed</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+           <tr *ngFor = "let project of projectsList | projectsearch:searchVal.value 
+                  | orderBy:sortBy.value ; let i = index">
+
+                <td> {{ project.project }} </td>
+                <td> {{ project.numberOfTasks }} </td>
+                <td> {{ project.priority }} </td>
+                <td> {{ project.startDateStr }} </td>
+                <td> {{ project.endDateStr }} </td>
+                <td> {{ project.completed }} </td>
+                
+                <td *ngIf="project.suspendFlag != 'Y' && project.completed != 'Y'"> 
+                  <input type="button" value="Edit" (click)="routeToUpdateProject(project.projectId)" 
+                      class="btn btn-primary" /> 
+                </td>
+
+                <td *ngIf="project.suspendFlag != 'Y' && project.completed != 'Y'"> 
+                  <input type="button" value="Suspend" (click)="suspendProject(project.projectId)" class="btn btn-danger" />
+                </td>
+
+           </tr>
+
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,65 @@
+<div class="container">
+
+  <div class="row">
+      <h3> Tasks List </h3><br/>
+      
+      <div class="col-md-2">
+        <span><b>Search By Project:</b></span>
+      </div>
+  
+      <div class="col-md-2">
+        <input type="text" #searchVal (keyup)="0" id="searchValue" class="form-control"/>
+      </div>
+  
+      <div class="col-md-2">
+        <span><b>Sort By:{{searchVal.value}}</b></span>
+      </div>
+  
+      <div class="col-md-2">
+          <select #sortBy (change) = "sortresults($event)" class="form-control" name="sortBy" id="sortBy">
+            <option value="0">Select</option>
+            <option value="priority">Priority</option>
+            <option value="startDateStr">Start Date</option>
+            <option value="endDateStr">End Date</option>
+            <option value="completed">Completed</option>
+          </select>
+      </div>
+  </div>
+
+  <div class="row">
+
+  <table class="table table-striped table-dark">
+    <thead>
+      <tr>
+        <th scope="col">Task</th>
+        <th scope="col">Parent</th>
+        <th scope="col">Project</th>
+        <th scope="col">Priority</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Completed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of taskList | orderBy:sortBy.value | 
+      search:searchVal.value;let i=index ">
+        <td>{{task.taskName}}</td>
+        <td>{{task.parentTaskName}}</td>
+        <td>{{task.projectName}}</td>
+        <td>{{task.priority}}</td>
+        <td>{{task.startDateStr}}</td>
+        <td>{{task.endDateStr}}</td>
+        <td>{{task.completed}}</td>
+        <td *ngIf="task.deleteFlag != 'Y' && task.completed != 'Y'">
+          <input type="button" value="Edit" (click)="editTask(task.taskId)" class="btn btn-primary" />
+        </td>
+        <td *ngIf="task.deleteFlag !='Y' && task.completed != 'Y'">
+          <input type="button" value="End Task" (click)="endTask(task.taskId)" class="btn btn-danger" />
+        </td>       
+      </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>

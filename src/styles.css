@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.invalid-feedback {
+    color: red;
+ }
+
+ /* Large rounded green border */
+hr.partition {
+  border: 1px solid steelblue;
+  
+}
+
+.bg {
+    /* The image used */
+	/* background-image: url("assets/images/grey-background.jpg"); */
+	background-image: url("assets/images/skyblue_background.jpg");
+	
+    /* Full height */
+	height: 100%;
+
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.nav-header {
+    color: black;
+}

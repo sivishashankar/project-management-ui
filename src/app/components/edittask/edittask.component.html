@@ -1,0 +1,153 @@
+
+<div class="container">
+  
+<div class="row">
+  
+  <div class="col-md-4">
+    
+    <h4>Update Task </h4>
+    <br/>
+    <form [formGroup]="updateTaskForm" (ngSubmit)="updateTask()">
+
+      <!-- Project -->
+      <div class="form group">       
+        <mat-form-field>
+            <mat-label> <span style="color: red">*</span>Search Project</mat-label>
+
+            <input type="text" placeholder="Search Project"  class="form-control"
+                matInput [formControl]="selectedProject" [matAutocomplete]="autoProject" />
+
+            <mat-autocomplete #autoProject="matAutocomplete">
+              <mat-option *ngFor="let project of (filteredProjectOptions | async)" [value]="project">
+                {{ project }}
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-error *ngIf="submitted && selectedProject.hasError('required')">
+                Project is required.
+            </mat-error>               
+        </mat-form-field>
+      </div>
+
+      <!-- Task -->
+      <div class="form-group">
+        
+        <span style="color: red">*</span> <label>Task:</label>   
+        
+        <input type="text" formControlName="task_name" 
+          class="form-control" [ngClass]="{ 'is-invalid': submitted && taskform.task_name.errors }" />
+        
+        <div *ngIf="submitted && taskform.task_name.errors" class="invalid-feedback">
+            <div *ngIf="taskform.task_name.errors.required">Task Name is required</div>
+            <div *ngIf="taskform.task_name.errors.alreadyExists">Task Name already exists</div>
+        </div>
+
+      </div>
+
+      <!-- Priority -->
+      <div class="form-group">
+        
+        <span style="color: red">*</span><label>Priority:</label>   
+        
+        <select class='select-option' formControlName="task_priority" name="task_priority" 
+            class="form-control" [ngClass]="{ 'is-invalid': submitted && taskform.task_priority.errors }"> 
+          <option [ngValue]="0">Please Select</option>
+          <option class='option' [selected]="taskform.task_priority === pr" *ngFor='let pr of priorityList' [ngValue]="pr">{{pr}}</option>
+        </select>
+               
+        <div *ngIf="submitted && taskform.task_priority.errors" class="invalid-feedback">
+            <div *ngIf="taskform.task_priority.errors.required">Priority is required</div>
+            <div *ngIf="taskform.task_priority.errors.incorrect">Priority is required</div>
+        </div>
+
+      </div>
+
+      <!-- Parent Task -->
+      <div class="form-group">
+        
+        <label>Parent Task:</label>
+        
+        <select class='select-option' formControlName="task_parent" name="task_parent" 
+          class="form-control">
+          <option [ngValue]="0">Please Select</option>
+          <option class='option' [selected]="taskform.task_parent === task.taskName"
+             *ngFor='let task of taskList' [ngValue]="task.taskName">{{task.taskName}}</option>
+        </select>   
+        
+        <div *ngIf="submitted && taskform.task_parent.errors" class="invalid-feedback">
+            <div *ngIf="taskform.task_parent.errors.sameTask">Parent Task cannot be same as Task Name</div>
+        </div>
+
+      </div>
+
+      <!-- Start Date -->
+      <div class="form-group">          
+       <label>Start Date:</label>          
+        <input type="text" formControlName="task_start_date" name="task_start_date" 
+          placeholder= "YYYY/MM/DD" class="form-control" [ngClass]="{ 'is-invalid': submitted && taskform.task_start_date.errors }" />
+        <div *ngIf="submitted && taskform.task_start_date.errors" class="invalid-feedback">
+            <div *ngIf="taskform.task_start_date.errors.required">
+              Start Date is required
+            </div>
+            <div *ngIf="taskform.task_start_date.errors.startDateRequired">
+              Start Date is Required when End Date is entered
+            </div>
+        </div>
+      </div>
+
+      <!-- End Date -->
+      <div class="form-group">          
+       <label>End Date:</label>             
+        <input type="text" formControlName="task_end_date" name="task_end_date" 
+        placeholder= "YYYY/MM/DD" class="form-control" [ngClass]="{ 'is-invalid': submitted && taskform.task_end_date.errors }" />          
+        <div *ngIf="submitted && taskform.task_end_date.errors" class="invalid-feedback">
+            <div *ngIf="taskform.task_end_date.errors.required">
+              End Date is required
+            </div>
+            <div *ngIf="taskform.task_end_date.errors.invalidEndDate">
+                End Date should be greater than Start Date
+            </div>
+        </div>
+
+      </div>
+
+      <!-- User -->
+      <div class="form group">       
+        <mat-form-field>
+            <mat-label> <span style="color: red">*</span>Search User</mat-label>
+
+            <input type="text" placeholder="Search User"  class="form-control"
+                matInput [formControl]="selectedUser" [matAutocomplete]="autoUser" />
+
+            <mat-autocomplete #autoUser="matAutocomplete">
+              <mat-option *ngFor="let user of (filteredUserOptions | async)" [value]="user">
+                {{ user }}
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-error *ngIf="submitted && selectedUser.hasError('required')">
+                User is required.
+            </mat-error>   
+            <mat-error *ngIf="submitted && selectedUser.hasError('alreadyAssigned')">
+              Selected User has already been assigned a tak. Please select other user.
+            </mat-error>            
+        </mat-form-field>
+      </div>        
+
+      <br/>
+
+      <div class="form-group">
+          <input type="submit" value="Update Task" class="btn btn-primary">
+          <span> &nbsp;&nbsp;&nbsp;</span>
+          <input type="button" value="Cancel" (click)="cancel()" class="btn">
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+</div>
+
+

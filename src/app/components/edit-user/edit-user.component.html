@@ -1,0 +1,59 @@
+<div class="container">
+
+  <div class="row">
+
+      <h3>Edit User</h3> <br/>
+
+      <div class="col-md-3 offset-md-3">        
+
+        <form [formGroup]="editUserForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+          
+          <!-- Employee Id -->
+          <div class="form-group">
+              <span style="color: red">*</span><label>Employee Id</label>
+              <input type="text" formControlName="employeeId" name="employeeId" class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted && userform.employeeId.errors }" />
+              <div *ngIf="submitted && userform.employeeId.errors" class="invalid-feedback">
+                  <div *ngIf="userform.employeeId.errors.required">Employee Id is required</div>
+              </div>
+          </div> <!-- Employee Id Div -->
+
+        
+          <!-- First Name -->
+          <div class="form-group">
+            <span style="color: red">*</span><label>First Name</label>
+            <input type="text" formControlName="firstName" name="firstName" class="form-control" 
+                [ngClass]="{ 'is-invalid': submitted && userform.firstName.errors }" />
+            <div *ngIf="submitted && userform.firstName.errors" class="invalid-feedback">
+                 <div *ngIf="userform.firstName.errors.required">First Name is required</div>
+            </div>
+          </div> <!-- First Name Div -->
+
+          <!-- Last Name -->
+          <div class="form-group">
+            <span style="color: red">*</span><label>Last Name</label>
+            <input type="text" formControlName="lastName" name="lastName" class="form-control" 
+                [ngClass]="{ 'is-invalid': submitted && userform.lastName.errors }" />
+            <div *ngIf="submitted && userform.lastName.errors" class="invalid-feedback">
+                 <div *ngIf="userform.lastName.errors.required">Last Name is required</div>
+            </div>
+          </div> <!-- Last Name Div -->          
+
+          <div class="form-group">        
+            <div class="col-md-2">
+              <input type="submit" value="Update User" class="btn btn-primary">
+            </div>
+
+            <div class="col-md-offset-4 col-md-2">
+             <input type="button" value="Cancel" class="btn btn-info" (click)="cancel()">   
+            </div>
+
+          </div>
+
+        </form> <!-- Update User Form Ends -->
+
+      </div> <!-- Column Div Ends -->
+  
+  </div> <!-- Row Div Ends -->
+
+</div> <!-- Container Div Ends -->

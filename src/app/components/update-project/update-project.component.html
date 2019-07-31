@@ -1,0 +1,110 @@
+<div class="container">
+
+  <div class="row">
+
+      <h3>Update Project</h3> <br/>
+
+      <div class="col-md-3 offset-md-3">        
+
+        <form [formGroup]="updateProjectForm" class="form-horizontal" (ngSubmit)="onSubmit()">
+          
+          <!-- Project -->
+          <div class="form-group">
+              <span style="color: red">*</span><label>Project</label>
+              <input type="text" formControlName="project" name="project" class="form-control" 
+                  [ngClass]="{ 'is-invalid': submitted && projectform.project.errors }" />
+              <div *ngIf="submitted && projectform.project.errors" class="invalid-feedback">
+                  <div *ngIf="projectform.project.errors.required">Project is required</div>
+                  <div *ngIf="projectform.project.errors.alreadyExists">Project Already exists</div>
+              </div>
+          </div> <!-- Project Div -->
+
+          <!-- Priority -->
+          <div class="form-group">                
+              <span style="color: red">*</span><label>Priority:</label>   
+              
+              <select class='select-option' formControlName="priority"
+                  class="form-control" [ngClass]="{ 'is-invalid': submitted && projectform.priority.errors }">
+                <option [ngValue]="0">Please Select</option>
+                <option class='option' [selected]="projectform.priority === pr" *ngFor='let pr of priorityList' [ngValue]="pr">{{pr}}</option>
+              </select>
+              
+              <div *ngIf="submitted && projectform.priority.errors" class="invalid-feedback">
+                  <div *ngIf="projectform.priority.errors.required">Priority is required</div>
+                  <div *ngIf="projectform.priority.errors.incorrect">Please select Priority</div>
+              </div>
+          </div> <!-- Priority Div -->
+
+          <!-- Start Date -->
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="text" formControlName="startDate" name="startDate" class="form-control" 
+                placeholder= "YYYY-MM-DD" [ngClass]="{ 'is-invalid': submitted && projectform.startDate.errors }" />
+            <div *ngIf="submitted && projectform.startDate.errors" class="invalid-feedback">
+                <div *ngIf="projectform.startDate.errors.dateValidator">
+                  Start Date should be in YYYY-MM-DD format
+                </div>
+                <div *ngIf="projectform.startDate.errors.startDateRequired">
+                  Start Date is Required when End Date is entered
+                </div>
+            </div>
+          </div> <!-- Start Date Div -->
+
+          <!-- End Date -->
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="text" formControlName="endDate" name="endDate" class="form-control" 
+                placeholder= "YYYY-MM-DD" [ngClass]="{ 'is-invalid': submitted && projectform.endDate.errors }" />
+            <div *ngIf="submitted && projectform.endDate.errors" class="invalid-feedback">
+                <div *ngIf="projectform.endDate.errors.dateValidator">
+                  End Date should be in YYYY-MM-DD format
+                </div>
+                <div *ngIf="projectform.endDate.errors.invalidEndDate">
+                  End Date should be greater than Start Date
+                </div>
+            </div>
+          </div> <!-- End Date Div -->
+
+           <!-- Manager -->
+          <div class="form group">
+            <mat-form-field>
+              <span style="color: red">*</span><mat-label>Search Manager</mat-label>
+
+              <input type="text" placeholder="Search Manager"  class="form-control"
+                    matInput [formControl]="selectedManager" [matAutocomplete]="auto" />
+
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let manager of (filteredManagerOptions | async)" [value]="manager">
+                    {{ manager }}
+                </mat-option>
+              </mat-autocomplete>
+
+              <mat-error *ngIf="submitted && selectedManager.hasError('required')">
+                Manager is required.
+              </mat-error>
+              <mat-error *ngIf="submitted && selectedManager.hasError('alreadyAssigned')">
+                Manager already assigned to different project.
+              </mat-error>
+            </mat-form-field>
+          </div> <!-- Manager Div -->
+
+          <br/>
+
+          <div class="form-group">        
+            <div class="col-md-2">
+              <input type="submit" value="Update Project" class="btn btn-primary">
+            </div>
+
+            <div class="col-md-offset-4 col-md-2">
+             <input type="button" value="Cancel" class="btn btn-info" (click)="cancel()">   
+            </div>
+
+          </div>
+
+        </form> <!-- Update Project Form Ends -->
+
+      </div> <!-- Column Div Ends -->
+  
+  </div> <!-- Row Div Ends -->
+
+</div> <!-- Container Div Ends -->
